@@ -643,6 +643,218 @@ class VHSHorrorTheme {
         
         this.isInitialized = false;
     }
+    
+    /**
+     * Enable brutal aesthetic mode with extreme corruption
+     */
+    enableBrutalMode() {
+        document.body.classList.add('brutal');
+        
+        // Add brutal static overlay
+        const brutalStatic = document.createElement('div');
+        brutalStatic.className = 'vhs-brutal-static';
+        document.body.appendChild(brutalStatic);
+        
+        // Initialize name corruption effects
+        this.initNameCorruption();
+        
+        // Enhanced corruption frequency for brutal mode
+        this.options.corruptionFrequency = 800;
+        this.startBrutalCorruption();
+    }
+    
+    /**
+     * Initialize name/text corruption effects
+     */
+    initNameCorruption() {
+        const textElements = document.querySelectorAll('h1, h2, .vhs-title, .vhs-name-corruption');
+        
+        textElements.forEach(element => {
+            const originalText = element.textContent;
+            element.setAttribute('data-name', originalText);
+            element.setAttribute('data-brutal-text', this.corruptText(originalText));
+            
+            // Add brutal corruption class
+            element.classList.add('vhs-name-corruption');
+            
+            // Random text corruption
+            setInterval(() => {
+                if (Math.random() > 0.85) {
+                    element.setAttribute('data-brutal-text', this.corruptText(originalText));
+                }
+            }, 1500);
+        });
+    }
+    
+    /**
+     * Corrupt text with random characters and symbols
+     */
+    corruptText(text) {
+        const corruptionChars = ['█', '▓', '▒', '░', '▄', '▀', '■', '□', '▪', '▫', '◉', '●', '○', '◦'];
+        const glitchChars = ['', '', '', '', '', '', '', '', '', ''];
+        
+        return text.split('').map(char => {
+            if (Math.random() > 0.7) {
+                if (Math.random() > 0.5) {
+                    return corruptionChars[Math.floor(Math.random() * corruptionChars.length)];
+                } else {
+                    return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                }
+            }
+            return char;
+        }).join('');
+    }
+    
+    /**
+     * Start brutal corruption effects
+     */
+    startBrutalCorruption() {
+        // Extreme screen corruption
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                document.body.style.filter = `
+                    contrast(${2 + Math.random() * 3}) 
+                    brightness(${0.3 + Math.random() * 0.7}) 
+                    hue-rotate(${Math.random() * 360}deg)
+                    invert(${Math.random() > 0.8 ? 1 : 0})
+                `;
+                
+                setTimeout(() => {
+                    document.body.style.filter = '';
+                }, 50 + Math.random() * 150);
+            }
+        }, 200);
+        
+        // Brutal text replacement
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                this.brutalTextReplace();
+            }
+        }, 3000);
+        
+        // Screen flash corruption
+        setInterval(() => {
+            if (Math.random() > 0.97) {
+                this.screenFlashCorruption();
+            }
+        }, 1000);
+    }
+    
+    /**
+     * Temporarily replace all text with corrupted versions
+     */
+    brutalTextReplace() {
+        const textNodes = this.getTextNodes(document.body);
+        const originalTexts = [];
+        
+        textNodes.forEach((node, index) => {
+            originalTexts[index] = node.textContent;
+            node.textContent = this.corruptText(node.textContent);
+        });
+        
+        setTimeout(() => {
+            textNodes.forEach((node, index) => {
+                if (originalTexts[index]) {
+                    node.textContent = originalTexts[index];
+                }
+            });
+        }, 100 + Math.random() * 300);
+    }
+    
+    /**
+     * Get all text nodes in an element
+     */
+    getTextNodes(element) {
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: function(node) {
+                    if (node.textContent.trim().length > 2) {
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                    return NodeFilter.FILTER_REJECT;
+                }
+            }
+        );
+        
+        let node;
+        while (node = walker.nextNode()) {
+            textNodes.push(node);
+        }
+        
+        return textNodes;
+    }
+    
+    /**
+     * Create brutal screen flash corruption
+     */
+    screenFlashCorruption() {
+        const flashDiv = document.createElement('div');
+        flashDiv.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: ${Math.random() > 0.5 ? '#ffffff' : '#000000'};
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0.9;
+            animation: vhs-brutal-flash 0.1s forwards;
+        `;
+        
+        // Add brutal flash animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes vhs-brutal-flash {
+                0% { opacity: 0.9; }
+                50% { opacity: 0.1; }
+                100% { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(flashDiv);
+        
+        setTimeout(() => {
+            if (document.body.contains(flashDiv)) {
+                document.body.removeChild(flashDiv);
+            }
+            if (document.head.contains(style)) {
+                document.head.removeChild(style);
+            }
+        }, 100);
+    }
+    
+    /**
+     * Initialize brutal text elements with corruption effects
+     */
+    createBrutalText(text, container = document.body) {
+        const brutalElement = document.createElement('div');
+        brutalElement.className = 'vhs-brutal-text';
+        brutalElement.textContent = text;
+        brutalElement.setAttribute('data-brutal-text', this.corruptText(text));
+        
+        container.appendChild(brutalElement);
+        return brutalElement;
+    }
+    
+    /**
+     * Create brutal card with stark aesthetic
+     */
+    createBrutalCard(title, content, container = document.body) {
+        const card = document.createElement('div');
+        card.className = 'vhs-brutal-card';
+        card.innerHTML = `
+            <h3>${title}</h3>
+            <p>${content}</p>
+        `;
+        
+        container.appendChild(card);
+        return card;
+    }
 }
 
 // Export for module use

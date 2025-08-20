@@ -15,6 +15,13 @@
     --vhs-noise: #1a1a1a;
     --vhs-hell-gray: #0a0a0a;
     --vhs-corrupt-gray: #333333;
+    
+    /* Brutal Aesthetic Colors */
+    --vhs-pure-black: #000000;
+    --vhs-stark-white: #ffffff;
+    --vhs-dead-gray: #1a1a1a;
+    --vhs-corruption-red: #ff0000;
+    --vhs-void-black: #050505;
 }
 
 /* Base VHS styling */
@@ -445,3 +452,350 @@
 
 .vhs-bg-dark { background: var(--vhs-gray-bg); }
 .vhs-bg-darker { background: var(--vhs-gray-darker); }
+
+/* ===== BRUTAL AESTHETIC ENHANCEMENTS ===== */
+/* Aggressive corruption and stark contrast styles */
+
+/* Brutal Text Corruption */
+.vhs-brutal-text {
+    font-family: 'VT323', monospace;
+    font-size: 2.5rem;
+    color: var(--vhs-stark-white);
+    background: var(--vhs-pure-black);
+    padding: 1rem 2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    animation: vhs-brutal-flicker 0.1s infinite, vhs-brutal-corruption 3s infinite;
+}
+
+.vhs-brutal-text::before {
+    content: attr(data-brutal-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--vhs-pure-black);
+    color: var(--vhs-corruption-red);
+    z-index: 2;
+    opacity: 0;
+    animation: vhs-brutal-glitch 0.3s infinite;
+}
+
+.vhs-brutal-text::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--vhs-stark-white) 50%, 
+        transparent);
+    z-index: 3;
+    animation: vhs-brutal-sweep 2s infinite;
+}
+
+@keyframes vhs-brutal-flicker {
+    0%, 95% { opacity: 1; }
+    96% { opacity: 0.1; }
+    97% { opacity: 1; }
+    98% { opacity: 0.3; }
+    99%, 100% { opacity: 1; }
+}
+
+@keyframes vhs-brutal-corruption {
+    0%, 90% { 
+        filter: contrast(1); 
+        transform: scale(1); 
+    }
+    91% { 
+        filter: contrast(3) invert(1); 
+        transform: scale(1.02) skew(2deg); 
+    }
+    93% { 
+        filter: contrast(1); 
+        transform: scale(1); 
+    }
+    95% { 
+        filter: contrast(2) brightness(0.1); 
+        transform: scale(0.98) skew(-1deg); 
+    }
+    97%, 100% { 
+        filter: contrast(1); 
+        transform: scale(1); 
+    }
+}
+
+@keyframes vhs-brutal-glitch {
+    0%, 85% { opacity: 0; }
+    86% { opacity: 1; transform: translateX(-2px); }
+    87% { opacity: 0; }
+    88% { opacity: 1; transform: translateX(2px); }
+    89%, 100% { opacity: 0; transform: translateX(0); }
+}
+
+@keyframes vhs-brutal-sweep {
+    0% { left: -100%; }
+    50% { left: -100%; }
+    52% { left: 100%; }
+    100% { left: 100%; }
+}
+
+/* Stark Horror Cards */
+.vhs-brutal-card {
+    background: var(--vhs-pure-black);
+    border: 2px solid var(--vhs-stark-white);
+    color: var(--vhs-stark-white);
+    padding: 2rem;
+    margin: 1rem 0;
+    font-family: 'VT323', monospace;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.1s ease;
+}
+
+.vhs-brutal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 2px
+        );
+    z-index: 1;
+    animation: vhs-brutal-static 0.05s infinite;
+}
+
+.vhs-brutal-card:hover {
+    background: var(--vhs-stark-white);
+    color: var(--vhs-pure-black);
+    border-color: var(--vhs-corruption-red);
+    animation: vhs-brutal-invert 0.2s;
+}
+
+@keyframes vhs-brutal-static {
+    0% { opacity: 0.05; transform: translateY(0); }
+    50% { opacity: 0.1; transform: translateY(1px); }
+    100% { opacity: 0.05; transform: translateY(0); }
+}
+
+@keyframes vhs-brutal-invert {
+    0%, 100% { filter: invert(0); }
+    25% { filter: invert(1); }
+    50% { filter: invert(0) contrast(2); }
+    75% { filter: invert(1); }
+}
+
+/* Pixelated Corruption Effect */
+.vhs-pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    filter: contrast(2) brightness(0.8);
+    animation: vhs-pixel-corruption 4s infinite;
+}
+
+@keyframes vhs-pixel-corruption {
+    0%, 90% { 
+        filter: contrast(2) brightness(0.8); 
+        transform: scale(1); 
+    }
+    91% { 
+        filter: contrast(5) brightness(0.3) saturate(0); 
+        transform: scale(1.01); 
+    }
+    93% { 
+        filter: contrast(2) brightness(0.8); 
+        transform: scale(1); 
+    }
+    95% { 
+        filter: contrast(1) brightness(1.2) saturate(2); 
+        transform: scale(0.99); 
+    }
+    97%, 100% { 
+        filter: contrast(2) brightness(0.8); 
+        transform: scale(1); 
+    }
+}
+
+/* Brutal Static Overlay */
+.vhs-brutal-static {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            var(--vhs-pure-black) 0px,
+            transparent 1px,
+            var(--vhs-stark-white) 2px,
+            transparent 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            var(--vhs-dead-gray) 1px,
+            transparent 2px
+        );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    animation: vhs-brutal-static-chaos 0.03s infinite;
+}
+
+@keyframes vhs-brutal-static-chaos {
+    0% { 
+        opacity: 0.03; 
+        transform: translate(0, 0); 
+        filter: invert(0); 
+    }
+    10% { 
+        opacity: 0.08; 
+        transform: translate(1px, -1px); 
+        filter: invert(0); 
+    }
+    20% { 
+        opacity: 0.02; 
+        transform: translate(-1px, 1px); 
+        filter: invert(1); 
+    }
+    30% { 
+        opacity: 0.06; 
+        transform: translate(0, -1px); 
+        filter: invert(0); 
+    }
+    40% { 
+        opacity: 0.04; 
+        transform: translate(1px, 0); 
+        filter: invert(1); 
+    }
+    50% { 
+        opacity: 0.07; 
+        transform: translate(-1px, -1px); 
+        filter: invert(0); 
+    }
+    60% { 
+        opacity: 0.03; 
+        transform: translate(0, 1px); 
+        filter: invert(1); 
+    }
+    70% { 
+        opacity: 0.05; 
+        transform: translate(1px, 1px); 
+        filter: invert(0); 
+    }
+    80% { 
+        opacity: 0.08; 
+        transform: translate(-1px, 0); 
+        filter: invert(1); 
+    }
+    90% { 
+        opacity: 0.02; 
+        transform: translate(0, 0); 
+        filter: invert(0); 
+    }
+    100% { 
+        opacity: 0.03; 
+        transform: translate(0, 0); 
+        filter: invert(0); 
+    }
+}
+
+/* Brutal Theme Modifier */
+.vhs-theme.brutal {
+    background: var(--vhs-pure-black);
+    color: var(--vhs-stark-white);
+}
+
+.vhs-theme.brutal .vhs-title {
+    color: var(--vhs-stark-white);
+    text-shadow: 
+        2px 2px 0 var(--vhs-pure-black),
+        -2px -2px 0 var(--vhs-corruption-red);
+}
+
+.vhs-theme.brutal .vhs-card {
+    border-color: var(--vhs-stark-white);
+    background: linear-gradient(135deg, var(--vhs-pure-black), var(--vhs-dead-gray));
+}
+
+/* Corrupted Name/Text Effect */
+.vhs-name-corruption {
+    font-family: 'VT323', monospace;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--vhs-stark-white);
+    background: var(--vhs-pure-black);
+    padding: 1rem 2rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border: 3px solid var(--vhs-stark-white);
+    animation: vhs-name-chaos 0.2s infinite;
+}
+
+.vhs-name-corruption::before {
+    content: attr(data-name);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--vhs-pure-black);
+    color: var(--vhs-corruption-red);
+    z-index: 2;
+    opacity: 0;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    animation: vhs-name-glitch-text 0.5s infinite;
+}
+
+@keyframes vhs-name-chaos {
+    0%, 85% { 
+        filter: contrast(1) brightness(1); 
+        transform: scale(1); 
+        border-color: var(--vhs-stark-white);
+    }
+    86% { 
+        filter: contrast(3) brightness(0.5) hue-rotate(180deg); 
+        transform: scale(1.02) skew(1deg); 
+        border-color: var(--vhs-corruption-red);
+    }
+    88% { 
+        filter: contrast(1) brightness(1); 
+        transform: scale(1); 
+        border-color: var(--vhs-stark-white);
+    }
+    90% { 
+        filter: contrast(2) brightness(1.5) saturate(0); 
+        transform: scale(0.98) skew(-1deg); 
+        border-color: var(--vhs-corruption-red);
+    }
+    92%, 100% { 
+        filter: contrast(1) brightness(1); 
+        transform: scale(1); 
+        border-color: var(--vhs-stark-white);
+    }
+}
+
+@keyframes vhs-name-glitch-text {
+    0%, 80% { opacity: 0; transform: translateX(0); }
+    81% { opacity: 1; transform: translateX(-3px); }
+    83% { opacity: 0; transform: translateX(3px); }
+    85% { opacity: 1; transform: translateX(-1px); }
+    87%, 100% { opacity: 0; transform: translateX(0); }
+}

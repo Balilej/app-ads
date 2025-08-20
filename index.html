@@ -193,6 +193,44 @@
         <section id="components" class="demo-section">
             <h2>▶ COMPONENT LIBRARY</h2>
             
+            <!-- Brutal Aesthetic Showcase -->
+            <div class="component-demo" style="border-left: 3px solid var(--vhs-stark-white); background: var(--vhs-pure-black);">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-stark-white);">Brutal Aesthetic Mode</h3>
+                <p style="color: var(--vhs-gray-light); margin-bottom: 1rem;">
+                    High-contrast, aggressive corruption effects for maximum visual impact.
+                </p>
+                
+                <!-- NEJEDI SPENCL style demonstration -->
+                <div class="vhs-name-corruption" data-name="NEJEDI SPENCL" data-brutal-text="██JEDI ▓PENCL">
+                    NEJEDI SPENCL
+                </div>
+                
+                <div style="margin: 2rem 0;">
+                    <div class="vhs-brutal-text" data-brutal-text="C█RRU██ED ██XT">CORRUPTED TEXT</div>
+                </div>
+                
+                <div class="vhs-brutal-card">
+                    <h4>[ BRUTAL_SIGNAL.DAT ]</h4>
+                    <p>Stark black and white aesthetic with extreme visual corruption and aggressive static overlays.</p>
+                </div>
+                
+                <button class="control-button" onclick="enableBrutalMode()" style="background: var(--vhs-pure-black); border-color: var(--vhs-stark-white); color: var(--vhs-stark-white);">
+                    ◉ ENABLE BRUTAL MODE ◉
+                </button>
+                
+                <div class="code-example" style="margin-top: 1rem; background: var(--vhs-void-black); border-color: var(--vhs-stark-white);">
+                    <code>
+// Enable brutal aesthetic mode<br>
+const vhsTheme = new VHSHorrorTheme();<br>
+vhsTheme.init();<br>
+vhsTheme.enableBrutalMode();<br><br>
+// Or create brutal text elements<br>
+vhsTheme.createBrutalText('NEJEDI SPENCL');<br>
+vhsTheme.createBrutalCard('SIGNAL', 'Corrupted data');
+                    </code>
+                </div>
+            </div>
+            
             <div class="component-demo">
                 <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Typography Components</h3>
                 <h1 class="vhs-title" data-glitch-text="GLITCH█D T█TLE" data-glitch-alt="GL█TCH▓D ▓ITLE">GLITCHED TITLE</h1>
@@ -439,6 +477,55 @@
 
         function jumpScare() {
             vhsTheme.jumpScare();
+        }
+        
+        function enableBrutalMode() {
+            vhsTheme.enableBrutalMode();
+            
+            // Show brutal mode notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: var(--vhs-pure-black);
+                color: var(--vhs-stark-white);
+                border: 3px solid var(--vhs-stark-white);
+                padding: 2rem;
+                font-family: 'VT323', monospace;
+                font-size: 1.5rem;
+                z-index: 99999;
+                text-align: center;
+                animation: vhs-brutal-notification 3s forwards;
+            `;
+            notification.innerHTML = `
+                <div>◉ BRUTAL MODE ACTIVATED ◉</div>
+                <div style="font-size: 0.8rem; margin-top: 1rem;">MAXIMUM CORRUPTION ENABLED</div>
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes vhs-brutal-notification {
+                    0% { opacity: 1; filter: contrast(1); }
+                    80% { opacity: 1; filter: contrast(1); }
+                    85% { opacity: 0.5; filter: contrast(3) invert(1); }
+                    90% { opacity: 1; filter: contrast(1); }
+                    95% { opacity: 0.3; filter: contrast(2) brightness(0.5); }
+                    100% { opacity: 0; filter: contrast(1); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+                if (document.head.contains(style)) {
+                    document.head.removeChild(style);
+                }
+            }, 3000);
         }
 
         // Smooth scrolling for navigation
