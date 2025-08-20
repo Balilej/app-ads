@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VHS Horror Theme • Digital Decay</title>
+    <link rel="stylesheet" href="vhs-horror.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .demo-header {
+            text-align: center;
+            padding: 2rem;
+            border-bottom: 1px solid var(--vhs-gray-dark);
+            margin-bottom: 3rem;
+        }
+
+        .demo-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            border: 1px solid var(--vhs-gray-dark);
+            background: linear-gradient(135deg, var(--vhs-gray-darker), var(--vhs-gray-dark));
+        }
+
+        .demo-section h2 {
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+            color: var(--vhs-sickly-yellow);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .component-demo {
+            margin: 2rem 0;
+            padding: 1rem;
+            border-left: 3px solid var(--vhs-blood-red);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .code-example {
+            background: var(--vhs-hell-gray);
+            border: 1px solid var(--vhs-corrupt-gray);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+            color: var(--vhs-gray-light);
+            overflow-x: auto;
+        }
+
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--vhs-gray-dark);
+            padding: 1rem;
+        }
+
+        .nav-link {
+            display: block;
+            color: var(--vhs-gray-light);
+            text-decoration: none;
+            padding: 0.5rem;
+            font-family: 'VT323', monospace;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--vhs-dirty-white);
+        }
+
+        .theme-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid var(--vhs-gray-dark);
+            padding: 1rem;
+        }
+
+        .control-button {
+            display: block;
+            margin: 0.5rem 0;
+            padding: 0.5rem 1rem;
+            background: var(--vhs-gray-darker);
+            border: 1px solid var(--vhs-gray-light);
+            color: var(--vhs-dirty-white);
+            font-family: 'VT323', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            background: var(--vhs-blood-red);
+        }
+
+        .hidden-message {
+            position: fixed;
+            bottom: -50px;
+            right: -100px;
+            font-family: 'VT323', monospace;
+            color: rgba(255,255,255,0.03);
+            font-size: 0.6rem;
+            z-index: -10;
+            transform: rotate(45deg);
+            opacity: 0.05;
+        }
+    </style>
+</head>
+<body>
+    <div class="vhs-static"></div>
+    <div class="vhs-lines"></div>
+    <div class="vhs-horror-bg"></div>
+    <canvas id="vhs-static-canvas" class="vhs-horror-static"></canvas>
+    <div id="vhs-subliminal" class="vhs-subliminal"></div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <a href="MainPage.html" class="nav-link">▶ ORIGINAL TRANSMISSION</a>
+        <a href="#components" class="nav-link">▶ COMPONENT LIBRARY</a>
+        <a href="#usage" class="nav-link">▶ USAGE GUIDE</a>
+        <a href="#download" class="nav-link">▶ EXTRACT FILES</a>
+    </nav>
+
+    <!-- Theme Controls -->
+    <div class="theme-controls">
+        <button class="control-button" onclick="toggleStatic()">TOGGLE STATIC</button>
+        <button class="control-button" onclick="toggleCorruption()">TOGGLE CORRUPTION</button>
+        <button class="control-button" onclick="toggleAudio()">TOGGLE AUDIO</button>
+        <button class="control-button" onclick="jumpScare()">EMERGENCY STOP</button>
+    </div>
+
+    <!-- Hidden creepy elements -->
+    <div style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
+                font-family: 'VT323', monospace; color: rgba(255,0,0,0.1); 
+                font-size: 0.8rem; z-index: -10; opacity: 0.05;">
+        the theme watches through every screen
+    </div>
+    
+    <div class="hidden-message">
+        this aesthetic spreads like a virus this aesthetic spreads like a virus
+    </div>
+
+    <header class="demo-header">
+        <h1 class="vhs-title" data-glitch-text="VHS ▓▓▓ HORROR" data-glitch-alt="█HS █O█RO█ THEME">VHS HORROR THEME</h1>
+        <p class="vhs-subtitle">◉ ANALOG DECAY AESTHETIC FRAMEWORK ◉</p>
+        <div class="vhs-corrupted-text" style="margin-top: 1rem;">
+            ▓▓▓ EXTRACTING THE VIBE FROM MAINPAGE ▓▓▓
+        </div>
+    </header>
+
+    <div class="demo-container">
+        <!-- Introduction -->
+        <section class="demo-section">
+            <h2>▶ TRANSMISSION OVERVIEW</h2>
+            <p class="vhs-text-mono" style="line-height: 1.6; color: var(--vhs-gray-light);">
+                This VHS Horror Theme extracts the distinctive analog horror aesthetic from the main page,
+                creating a reusable framework for digital decay. The theme includes visual corruption effects,
+                VHS-style overlays, glitch animations, and interactive audio elements that degrade over time.
+            </p>
+            
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Core Features</h3>
+                <ul class="vhs-text-mono-alt" style="color: var(--vhs-gray-light); line-height: 1.8;">
+                    <li>• VHS static overlays and scan lines</li>
+                    <li>• Dynamic text corruption and glitch effects</li>
+                    <li>• Time-based escalation of horror elements</li>
+                    <li>• Interactive audio context with ambient sounds</li>
+                    <li>• Modular CSS classes for easy application</li>
+                    <li>• JavaScript API for custom implementations</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Component Library -->
+        <section id="components" class="demo-section">
+            <h2>▶ COMPONENT LIBRARY</h2>
+            
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Typography Components</h3>
+                <h1 class="vhs-title" data-glitch-text="GLITCH█D T█TLE" data-glitch-alt="GL█TCH▓D ▓ITLE">GLITCHED TITLE</h1>
+                <p class="vhs-subtitle">◉ Flickering Subtitle Effect ◉</p>
+                <div class="vhs-corrupted-text">Text with corruption animation</div>
+                
+                <div class="code-example">
+&lt;h1 class="vhs-title" data-glitch-text="GLITCH█D T█TLE" data-glitch-alt="GL█TCH▓D ▓ITLE"&gt;
+    GLITCHED TITLE
+&lt;/h1&gt;
+&lt;p class="vhs-subtitle"&gt;◉ Flickering Subtitle Effect ◉&lt;/p&gt;
+&lt;div class="vhs-corrupted-text"&gt;Text with corruption animation&lt;/div&gt;
+                </div>
+            </div>
+
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Card Components</h3>
+                <div class="usage-grid">
+                    <div class="vhs-card">
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">[ CORRUPTED_FILE.VHS ]</h4>
+                        <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                            A card component with VHS styling. Hover effects include glitch animations
+                            and chromatic aberration.
+                        </p>
+                        <a href="#" class="vhs-button">◉ ACCESS ◉</a>
+                    </div>
+                    <div class="vhs-card">
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">[ SIGNAL_LOST.DAT ]</h4>
+                        <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                            Cards automatically degrade on hover with filter effects and
+                            border color changes.
+                        </p>
+                        <a href="#" class="vhs-button">◉ FAILED ◉</a>
+                    </div>
+                </div>
+
+                <div class="code-example">
+&lt;div class="vhs-card"&gt;
+    &lt;h4&gt;Card Title&lt;/h4&gt;
+    &lt;p&gt;Card content with VHS styling&lt;/p&gt;
+    &lt;a href="#" class="vhs-button"&gt;◉ BUTTON ◉&lt;/a&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Button Components</h3>
+                <div style="margin: 1rem 0;">
+                    <a href="#" class="vhs-button">◉ PRIMARY ACTION ◉</a>
+                    <a href="#" class="vhs-button">◉ SIGNAL TRACE ◉</a>
+                    <a href="#" class="vhs-button">◉ DATA CORRUPT ◉</a>
+                </div>
+
+                <div class="code-example">
+&lt;a href="#" class="vhs-button"&gt;◉ BUTTON TEXT ◉&lt;/a&gt;
+                </div>
+            </div>
+        </section>
+
+        <!-- Usage Guide -->
+        <section id="usage" class="demo-section">
+            <h2>▶ USAGE GUIDE</h2>
+            
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Basic Implementation</h3>
+                <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                    Include the CSS and JavaScript files, then initialize the theme:
+                </p>
+                
+                <div class="code-example">
+&lt;!-- Include the theme files --&gt;
+&lt;link rel="stylesheet" href="vhs-horror.css"&gt;
+&lt;script src="vhs-horror.js"&gt;&lt;/script&gt;
+
+&lt;!-- Initialize the theme --&gt;
+&lt;script&gt;
+    const vhsTheme = new VHSHorrorTheme({
+        enableAudio: true,
+        enableStatic: true,
+        enableCorruption: true,
+        enableSubliminal: true,
+        staticIntensity: 0.12
+    });
+    vhsTheme.init();
+&lt;/script&gt;
+                </div>
+            </div>
+
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">CSS-Only Usage</h3>
+                <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                    For static styling without JavaScript effects:
+                </p>
+                
+                <div class="code-example">
+&lt;!-- Add theme class to body --&gt;
+&lt;body class="vhs-theme"&gt;
+    &lt;!-- Add overlays --&gt;
+    &lt;div class="vhs-static"&gt;&lt;/div&gt;
+    &lt;div class="vhs-lines"&gt;&lt;/div&gt;
+    &lt;div class="vhs-horror-bg"&gt;&lt;/div&gt;
+    
+    &lt;!-- Use theme classes --&gt;
+    &lt;h1 class="vhs-title"&gt;Your Title&lt;/h1&gt;
+    &lt;div class="vhs-card"&gt;Your Content&lt;/div&gt;
+&lt;/body&gt;
+                </div>
+            </div>
+
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Available CSS Classes</h3>
+                <div class="usage-grid">
+                    <div>
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">Layout</h4>
+                        <ul class="vhs-text-mono-alt" style="color: var(--vhs-gray-light); font-size: 0.9rem;">
+                            <li>• .vhs-theme</li>
+                            <li>• .vhs-grid</li>
+                            <li>• .vhs-static</li>
+                            <li>• .vhs-lines</li>
+                            <li>• .vhs-horror-bg</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">Typography</h4>
+                        <ul class="vhs-text-mono-alt" style="color: var(--vhs-gray-light); font-size: 0.9rem;">
+                            <li>• .vhs-title</li>
+                            <li>• .vhs-subtitle</li>
+                            <li>• .vhs-corrupted-text</li>
+                            <li>• .vhs-text-mono</li>
+                            <li>• .vhs-text-mono-alt</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">Components</h4>
+                        <ul class="vhs-text-mono-alt" style="color: var(--vhs-gray-light); font-size: 0.9rem;">
+                            <li>• .vhs-card</li>
+                            <li>• .vhs-button</li>
+                            <li>• .vhs-subliminal</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">Colors</h4>
+                        <ul class="vhs-text-mono-alt" style="color: var(--vhs-gray-light); font-size: 0.9rem;">
+                            <li>• .vhs-color-primary</li>
+                            <li>• .vhs-color-accent</li>
+                            <li>• .vhs-color-danger</li>
+                            <li>• .vhs-color-muted</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="download" class="demo-section">
+            <h2>▶ FILE EXTRACTION</h2>
+            
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Theme Files</h3>
+                <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                    The VHS Horror theme consists of two main files extracted from the original MainPage:
+                </p>
+                
+                <div class="usage-grid">
+                    <div class="vhs-card">
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">vhs-horror.css</h4>
+                        <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                            Complete stylesheet with VHS aesthetic, color variables, animations, 
+                            and component classes.
+                        </p>
+                        <a href="vhs-horror.css" class="vhs-button" download>◉ EXTRACT CSS ◉</a>
+                    </div>
+                    <div class="vhs-card">
+                        <h4 class="vhs-text-mono" style="color: var(--vhs-dirty-white);">vhs-horror.js</h4>
+                        <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                            JavaScript module for interactive effects, audio context, 
+                            and dynamic corruption.
+                        </p>
+                        <a href="vhs-horror.js" class="vhs-button" download>◉ EXTRACT JS ◉</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="component-demo">
+                <h3 class="vhs-text-mono" style="color: var(--vhs-sickly-yellow);">Original Source</h3>
+                <p class="vhs-text-mono-alt" style="color: var(--vhs-gray-light);">
+                    View the original implementation that inspired this modular theme:
+                </p>
+                <a href="MainPage.html" class="vhs-button">◉ VIEW ORIGINAL TRANSMISSION ◉</a>
+            </div>
+        </section>
+
+        <div class="vhs-corrupted-text" style="text-align: center; margin: 3rem 0;">
+            ▓▓▓ THEME EXTRACTED SUCCESSFULLY ▓▓▓
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 2rem; border-top: 1px solid var(--vhs-gray-dark); margin-top: 3rem;">
+        <p class="vhs-text-mono" style="color: var(--vhs-gray-light);">
+            ◉ VHS HORROR AESTHETIC FRAMEWORK ◉
+        </p>
+        <p class="vhs-text-mono" style="color: var(--vhs-corrupt-gray); font-size: 0.8rem; margin-top: 1rem;">
+            [ THE VIBE HAS BEEN SUCCESSFULLY EXTRACTED ]
+        </p>
+    </footer>
+
+    <script src="vhs-horror.js"></script>
+    <script>
+        // Initialize the VHS theme
+        const vhsTheme = new VHSHorrorTheme({
+            enableAudio: true,
+            enableStatic: true,
+            enableCorruption: true,
+            enableSubliminal: true,
+            enableEscalation: false, // Disabled for demo purposes
+            staticIntensity: 0.08,
+            corruptionFrequency: 3000
+        });
+        
+        vhsTheme.init();
+
+        // Control functions
+        function toggleStatic() {
+            const canvas = document.getElementById('vhs-static-canvas');
+            canvas.style.display = canvas.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleCorruption() {
+            const overlays = document.querySelectorAll('.vhs-static, .vhs-lines');
+            overlays.forEach(overlay => {
+                overlay.style.display = overlay.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+
+        function toggleAudio() {
+            if (vhsTheme.audioContext) {
+                if (vhsTheme.audioContext.state === 'running') {
+                    vhsTheme.audioContext.suspend();
+                } else {
+                    vhsTheme.audioContext.resume();
+                }
+            }
+        }
+
+        function jumpScare() {
+            vhsTheme.jumpScare();
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-link[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
