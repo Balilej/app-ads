@@ -104,13 +104,31 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 30%, rgba(58, 10, 10, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(26, 26, 26, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 0.3) 0%, transparent 60%),
-                linear-gradient(45deg, transparent 30%, rgba(42, 42, 42, 0.08) 50%, transparent 70%),
-                linear-gradient(135deg, rgba(5, 5, 5, 0.1) 0%, transparent 100%);
-            animation: horror-distort 3s infinite;
+                radial-gradient(circle at 20% 30%, rgba(58, 10, 10, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(26, 26, 26, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 0.35) 0%, transparent 60%),
+                radial-gradient(circle at 10% 80%, rgba(20, 0, 0, 0.15) 0%, transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(0, 0, 20, 0.15) 0%, transparent 30%),
+                linear-gradient(45deg, transparent 30%, rgba(42, 42, 42, 0.12) 50%, transparent 70%),
+                linear-gradient(135deg, rgba(5, 5, 5, 0.15) 0%, transparent 100%),
+                linear-gradient(90deg, transparent 48%, rgba(100, 0, 0, 0.03) 49%, rgba(100, 0, 0, 0.03) 51%, transparent 52%);
+            animation: horror-distort 3s infinite, shadow-movement 8s infinite;
             z-index: -1;
+        }
+        
+        @keyframes shadow-movement {
+            0%, 100% { 
+                background-position: 0% 0%, 100% 100%, 50% 50%, 10% 80%, 90% 20%, 0% 0%, 0% 0%, 0% 0%;
+            }
+            25% { 
+                background-position: 5% 10%, 95% 90%, 45% 55%, 15% 75%, 85% 25%, 10% 10%, 10% 10%, 10% 10%;
+            }
+            50% { 
+                background-position: 10% 5%, 90% 95%, 55% 45%, 5% 85%, 95% 15%, 5% 5%, 5% 5%, 5% 5%;
+            }
+            75% { 
+                background-position: 15% 15%, 85% 85%, 40% 60%, 20% 70%, 80% 30%, 15% 15%, 15% 15%, 15% 15%;
+            }
         }
         
         @keyframes horror-distort {
@@ -506,6 +524,19 @@
     <canvas class="horror-static" id="static"></canvas>
     <div class="subliminal-text" id="subliminal"></div>
     
+    <!-- Hidden creepy elements -->
+    <div style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
+                font-family: 'VT323', monospace; color: rgba(255,0,0,0.1); 
+                font-size: 0.8rem; z-index: -10; opacity: 0.05;">
+        they are watching you through the screen
+    </div>
+    
+    <div style="position: fixed; bottom: -50px; right: -100px; 
+                font-family: 'VT323', monospace; color: rgba(255,255,255,0.03); 
+                font-size: 0.6rem; z-index: -10; transform: rotate(45deg);">
+        you should not be here you should not be here you should not be here
+    </div>
+    
     <header class="header">
         <h1 class="title">BUSTIJN TELLER</h1>
         <p class="subtitle">◉ TRANSMISSION INTERCEPTED ◉</p>
@@ -603,6 +634,51 @@
     </footer>
     
     <script>
+        // Audio context for creepy ambient sounds
+        let audioContext;
+        let staticNoiseNode;
+        let lowFreqOscillator;
+        
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create low frequency ambient hum
+                lowFreqOscillator = audioContext.createOscillator();
+                const lowFreqGain = audioContext.createGain();
+                lowFreqOscillator.type = 'sine';
+                lowFreqOscillator.frequency.setValueAtTime(40, audioContext.currentTime);
+                lowFreqGain.gain.setValueAtTime(0.02, audioContext.currentTime);
+                lowFreqOscillator.connect(lowFreqGain);
+                lowFreqGain.connect(audioContext.destination);
+                lowFreqOscillator.start();
+                
+                // Create static noise
+                const bufferSize = audioContext.sampleRate * 2;
+                const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                
+                staticNoiseNode = audioContext.createBufferSource();
+                const staticGain = audioContext.createGain();
+                staticNoiseNode.buffer = noiseBuffer;
+                staticNoiseNode.loop = true;
+                staticGain.gain.setValueAtTime(0.005, audioContext.currentTime);
+                staticNoiseNode.connect(staticGain);
+                staticGain.connect(audioContext.destination);
+                staticNoiseNode.start();
+                
+            } catch (e) {
+                console.log('Audio context not available');
+            }
+        }
+        
+        // Initialize audio on first user interaction
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('mousemove', initAudio, { once: true });
+        
         // VHS static noise effect
         const canvas = document.getElementById('static');
         const ctx = canvas.getContext('2d');
@@ -616,11 +692,41 @@
             
             for (let i = 0; i < data.length; i += 4) {
                 const intensity = Math.random();
-                const gray = intensity * 120; // Increased intensity
-                data[i] = gray;     // Red
-                data[i + 1] = gray; // Green
-                data[i + 2] = gray; // Blue
-                data[i + 3] = Math.random() * 40; // More visible alpha
+                
+                // Occasionally add red pixels for unsettling effect
+                if (Math.random() > 0.999) {
+                    data[i] = 255;     // Red
+                    data[i + 1] = 0;   // Green  
+                    data[i + 2] = 0;   // Blue
+                    data[i + 3] = 30;  // Alpha
+                } else {
+                    const gray = intensity * 120;
+                    data[i] = gray;     // Red
+                    data[i + 1] = gray; // Green
+                    data[i + 2] = gray; // Blue
+                    data[i + 3] = Math.random() * 40; // Alpha
+                }
+            }
+            
+            // Occasionally add "faces" in the static
+            if (Math.random() > 0.9995) {
+                const x = Math.floor(Math.random() * (canvas.width - 20));
+                const y = Math.floor(Math.random() * (canvas.height - 20));
+                
+                // Draw a subtle dark circle (like an eye)
+                for (let dx = -3; dx <= 3; dx++) {
+                    for (let dy = -3; dy <= 3; dy++) {
+                        if (dx*dx + dy*dy <= 9) {
+                            const pixelIndex = ((y + dy) * canvas.width + (x + dx)) * 4;
+                            if (pixelIndex >= 0 && pixelIndex < data.length) {
+                                data[pixelIndex] = 20;     // Dark red
+                                data[pixelIndex + 1] = 20; // Dark green
+                                data[pixelIndex + 2] = 20; // Dark blue
+                                data[pixelIndex + 3] = 80; // More visible
+                            }
+                        }
+                    }
+                }
             }
             
             ctx.putImageData(imageData, 0, 0);
@@ -641,14 +747,22 @@
         const subliminalMessages = [
             'YOU ARE BEING WATCHED',
             'SIGNAL LOST',
-            'THEY KNOW',
+            'THEY KNOW WHERE YOU ARE',
             'CORRUPTED MEMORY',
-            'NO ESCAPE',
+            'NO ESCAPE FROM THIS PLACE',
             'STATIC CONSUMES ALL',
-            'THE GRAY VOID CALLS',
+            'THE GRAY VOID CALLS YOUR NAME',
             'TRANSMISSION HIJACKED',
-            'REALITY DEGRADES',
-            'HELP ME'
+            'REALITY DEGRADES AROUND YOU',
+            'HELP ME... PLEASE...',
+            'SOMETHING IS BEHIND YOU',
+            'DO NOT TURN AROUND',
+            'YOUR SCREEN IS BEING MONITORED',
+            'WE HAVE BEEN TRYING TO REACH YOU',
+            'THE SIGNAL NEVER STOPS',
+            'YOU SHOULD NOT BE HERE',
+            'CLOSE THE BROWSER NOW',
+            'IT KNOWS YOU ARE WATCHING'
         ];
         
         let subliminalIndex = 0;
@@ -771,8 +885,235 @@
                     0% { opacity: 1; transform: scale(1); }
                     100% { opacity: 0; transform: scale(0.3) translateY(-10px); }
                 }
+                
+                .cursor-eye {
+                    position: fixed;
+                    width: 20px;
+                    height: 20px;
+                    background: radial-gradient(circle, #ff0000 2px, transparent 3px, #333 8px, transparent 9px);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                }
+                
+                .fake-warning {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #1a1a1a;
+                    border: 2px solid #ff0000;
+                    color: #ff0000;
+                    padding: 10px;
+                    font-family: 'VT323', monospace;
+                    font-size: 12px;
+                    z-index: 10000;
+                    opacity: 0;
+                    transition: opacity 0.5s ease;
+                    max-width: 250px;
+                }
+                
+                .watching-eye {
+                    position: fixed;
+                    width: 30px;
+                    height: 30px;
+                    background: radial-gradient(circle, #000 5px, #333 6px, #000 15px);
+                    border-radius: 50%;
+                    opacity: 0;
+                    transition: opacity 2s ease;
+                    z-index: 500;
+                }
+                
+                .watching-eye::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 8px;
+                    height: 8px;
+                    background: #ff0000;
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                    animation: eye-blink 4s infinite;
+                }
+                
+                @keyframes eye-blink {
+                    0%, 95% { opacity: 1; }
+                    96%, 98% { opacity: 0; }
+                    99%, 100% { opacity: 1; }
+                }
             `;
             document.head.appendChild(style);
+        }
+        
+        // Creepy cursor follower
+        const cursorEye = document.createElement('div');
+        cursorEye.className = 'cursor-eye';
+        document.body.appendChild(cursorEye);
+        
+        let cursorTimeout;
+        document.addEventListener('mousemove', (e) => {
+            cursorEye.style.left = (e.clientX - 10) + 'px';
+            cursorEye.style.top = (e.clientY - 10) + 'px';
+            
+            // Sometimes show the eye following cursor
+            if (Math.random() > 0.995) {
+                cursorEye.style.opacity = '0.7';
+                clearTimeout(cursorTimeout);
+                cursorTimeout = setTimeout(() => {
+                    cursorEye.style.opacity = '0';
+                }, 1000 + Math.random() * 2000);
+            }
+        });
+        
+        // Fake system warnings
+        function showFakeWarning() {
+            const warnings = [
+                "SECURITY ALERT: Unauthorized access detected",
+                "SYSTEM ERROR: Memory corruption in sector 7",
+                "WARNING: Signal interference detected",
+                "ALERT: Unknown process monitoring activity",
+                "ERROR: Reality.dll has stopped working",
+                "WARNING: Temporal anomaly detected in local space"
+            ];
+            
+            const warning = document.createElement('div');
+            warning.className = 'fake-warning';
+            warning.textContent = warnings[Math.floor(Math.random() * warnings.length)];
+            document.body.appendChild(warning);
+            
+            setTimeout(() => {
+                warning.style.opacity = '1';
+            }, 100);
+            
+            setTimeout(() => {
+                warning.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(warning)) {
+                        document.body.removeChild(warning);
+                    }
+                }, 500);
+            }, 3000 + Math.random() * 4000);
+        }
+        
+        // Show fake warnings periodically
+        setInterval(showFakeWarning, 15000 + Math.random() * 20000);
+        
+        // Watching eyes that appear in corners
+        function addWatchingEye() {
+            const eye = document.createElement('div');
+            eye.className = 'watching-eye';
+            
+            const positions = [
+                { top: '20px', left: '20px' },
+                { top: '20px', right: '20px' },
+                { bottom: '20px', left: '20px' },
+                { bottom: '20px', right: '20px' },
+                { top: '50%', left: '20px' },
+                { top: '50%', right: '20px' }
+            ];
+            
+            const pos = positions[Math.floor(Math.random() * positions.length)];
+            Object.assign(eye.style, pos);
+            
+            document.body.appendChild(eye);
+            
+            setTimeout(() => {
+                eye.style.opacity = '0.6';
+            }, 100);
+            
+            setTimeout(() => {
+                eye.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(eye)) {
+                        document.body.removeChild(eye);
+                    }
+                }, 2000);
+            }, 4000 + Math.random() * 6000);
+        }
+        
+        // Add watching eyes periodically
+        setInterval(addWatchingEye, 12000 + Math.random() * 18000);
+        
+        // Time-based escalation - effects get worse over time
+        let timeOnPage = 0;
+        let originalTitle = document.title;
+        
+        setInterval(() => {
+            timeOnPage += 1000;
+            
+            // Manipulate browser title
+            if (timeOnPage > 20000 && Math.random() > 0.95) {
+                const creepyTitles = [
+                    "THEY KNOW YOU'RE HERE",
+                    "DO NOT CLOSE THIS TAB",
+                    "WATCHING... WAITING...",
+                    "SIGNAL INTERCEPTED",
+                    "YOU CANNOT LEAVE",
+                    originalTitle
+                ];
+                document.title = creepyTitles[Math.floor(Math.random() * creepyTitles.length)];
+                
+                setTimeout(() => {
+                    document.title = originalTitle;
+                }, 2000 + Math.random() * 3000);
+            }
+            
+            // After 30 seconds, increase corruption frequency
+            if (timeOnPage > 30000) {
+                if (Math.random() > 0.98) {
+                    pageCorruption();
+                }
+            }
+            
+            // After 60 seconds, add jump scares
+            if (timeOnPage > 60000) {
+                if (Math.random() > 0.999) {
+                    jumpScare();
+                }
+            }
+        }, 1000);
+        
+        // Jump scare function
+        function jumpScare() {
+            const scareDiv = document.createElement('div');
+            scareDiv.style.position = 'fixed';
+            scareDiv.style.top = '0';
+            scareDiv.style.left = '0';
+            scareDiv.style.width = '100%';
+            scareDiv.style.height = '100%';
+            scareDiv.style.background = '#ff0000';
+            scareDiv.style.zIndex = '99999';
+            scareDiv.style.opacity = '0';
+            scareDiv.style.pointerEvents = 'none';
+            scareDiv.style.fontSize = '4rem';
+            scareDiv.style.color = '#000';
+            scareDiv.style.display = 'flex';
+            scareDiv.style.alignItems = 'center';
+            scareDiv.style.justifyContent = 'center';
+            scareDiv.style.fontFamily = 'VT323, monospace';
+            scareDiv.textContent = 'YOU SHOULD NOT HAVE COME HERE';
+            
+            document.body.appendChild(scareDiv);
+            
+            scareDiv.style.opacity = '0.9';
+            setTimeout(() => {
+                scareDiv.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(scareDiv)) {
+                        document.body.removeChild(scareDiv);
+                    }
+                }, 200);
+            }, 150);
+            
+            // Intensify audio during jump scare
+            if (audioContext && lowFreqOscillator) {
+                lowFreqOscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+                setTimeout(() => {
+                    lowFreqOscillator.frequency.setValueAtTime(40, audioContext.currentTime);
+                }, 500);
+            }
         }
     </script>
 </body>
